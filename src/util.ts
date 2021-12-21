@@ -19,3 +19,20 @@ export const getIntFromEnvironment = (env: NodeJS.ProcessEnv, name: string, defa
   }
   return numberValue;
 };
+
+export const getStringListFromEnvironment = (
+  env: NodeJS.ProcessEnv,
+  name: string,
+  delimiter: string = ",",
+  defaultValue?: string[]
+) => {
+  const rawValue = env[name];
+  if (rawValue === undefined) {
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    } else {
+      throw new Error(`Environment variable ${name} is undefined, and there is no default list of supplied`);
+    }
+  }
+  return rawValue.split(delimiter).map((token) => token.trim());
+};

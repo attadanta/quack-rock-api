@@ -19,5 +19,5 @@
   },
   "include": [
       "src/**/*"
-  ]
+, "src/alphavantage/simple-stock-prices-service.ts"  ]
 }
