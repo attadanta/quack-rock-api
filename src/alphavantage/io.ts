@@ -14,9 +14,7 @@ export const isDailyStockPrices = (data: unknown): data is DailyClosingStockPric
     return false;
   }
 
-  const keys = Object.keys(rawTimeSeries);
-  for (let i = 0; i < keys.length; i++) {
-    const currentKey = keys[i];
+  for (const currentKey of Object.keys(rawTimeSeries)) {
     if (!datePattern.test(currentKey)) {
       return false;
     }

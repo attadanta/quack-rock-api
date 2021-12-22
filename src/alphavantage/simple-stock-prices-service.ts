@@ -81,7 +81,7 @@ const selectStockPrices = (store: DailyClosingStockPrices, selector: Selector): 
 
   const result: StockPrice[] = [];
 
-  for (let timestamp of Object.keys(timeSeries)) {
+  for (const timestamp of Object.keys(timeSeries)) {
     if (selector.apply(timestamp)) {
       const close = parseFloat(timeSeries[timestamp]["4. close"]);
       result.push({ timestamp, close });
