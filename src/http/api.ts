@@ -10,7 +10,7 @@ import {
 } from "../core/stock-prices-service";
 import { HttpException, InternalServerError, BadRequestException } from "./errors";
 
-export class PriceRoutes {
+export class QuackRockApi {
   #pricesService: StockPricesService;
   #logger: winston.Logger;
   #dateFormat = /^\d{4}-\d{2}-\d{2}$/;
@@ -41,6 +41,10 @@ export class PriceRoutes {
 
   private async getTickerPrices(req: Request, res: Response) {
     const ticker = req.params["ticker"];
+
+    if (!this.#pricesService.symbols().includes(ticker)) {
+      throw new BadRequestException(`Ticker is not configured ${ticker}`);
+    }
 
     this.#logger.debug(`Fetching price data for ${ticker}`);
     const criteria = new CompoundSelector();

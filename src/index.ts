@@ -5,7 +5,7 @@ import helmet from "helmet";
 import winston from "winston";
 import { getIntFromEnvironment, getStringListFromEnvironment } from "./util";
 import { FileBasedStockPricesService } from "./alphavantage/simple-stock-prices-service";
-import { PriceRoutes as Api } from "./http/api";
+import { QuackRockApi as Api } from "./http/api";
 
 dotenv.config();
 
@@ -32,15 +32,15 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const service = new FileBasedStockPricesService(symbols, dataDirectory);
-const routes = new Api(logger, service);
+const api = new Api(logger, service);
 
 const app = express();
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(routes.configurePriceRoute());
-app.use(routes.errorHandler);
+app.use(api.configurePriceRoute());
+app.use(api.errorHandler);
 
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`);

@@ -1,0 +1,18 @@
+{
+    "Meta Data": {
+        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
+        "2. Symbol": "GE",
+        "3. Last Refreshed": "2021-12-20",
+        "4. Output Size": "Compact",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2021-12-20": {
+            "1. open": "90.0000",
+            "2. high": "90.1000",
+            "3. low": "88.1700",
+            "4. close": "89.9800",
+            "5. volume": "6013175"
+        }
+    }
+}
