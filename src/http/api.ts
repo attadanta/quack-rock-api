@@ -1,5 +1,5 @@
 import winston from "winston";
-import { Application, Request, Response, NextFunction } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { UnknownSymbolError, ValidationError } from "../core/errors";
 import {
   CompoundSelector,
@@ -8,6 +8,7 @@ import {
   StockPricesService,
   UntilSelector,
 } from "../core/stock-prices-service";
+import { HttpException, InternalServerError, BadRequestException } from "./errors";
 
 export class PriceRoutes {
   #pricesService: StockPricesService;
@@ -19,17 +20,26 @@ export class PriceRoutes {
     this.#logger = logger;
   }
 
-  configureRoutes(app: Application) {
-    app.route(`/price/:ticker`).get(async (req: Request, res: Response, next: NextFunction) => {
+  configurePriceRoute() {
+    const router = Router();
+
+    router.get(`/price/:ticker`, async (req: Request, res: Response, next: NextFunction) => {
       this.getTickerPrices(req, res)
         .then((results) => {
           res.status(200).send(results);
         })
         .catch(next);
     });
+
+    return router;
   }
 
-  async getTickerPrices(req: Request, res: Response) {
+  errorHandler = (error: HttpException, request: Request, response: Response, _: NextFunction) => {
+    const status = error.statusCode ?? 500;
+    response.status(status).send(error);
+  };
+
+  private async getTickerPrices(req: Request, res: Response) {
     const ticker = req.params["ticker"];
 
     this.#logger.debug(`Fetching price data for ${ticker}`);
@@ -53,7 +63,7 @@ export class PriceRoutes {
     return results;
   }
 
-  validateDateQueryParameter(req: Request, name: string, onValid: (parameterValue: string) => void) {
+  private validateDateQueryParameter(req: Request, name: string, onValid: (parameterValue: string) => void) {
     const parameterValue = req.query[name];
     if (parameterValue) {
       if (typeof parameterValue !== "string" || !this.#dateFormat.test(parameterValue)) {
@@ -64,34 +74,3 @@ export class PriceRoutes {
     }
   }
 }
-
-class HttpException extends Error {
-  statusCode?: number;
-  message: string;
-  error: string | null;
-
-  constructor(statusCode: number, message: string, error?: string) {
-    super(message);
-
-    this.statusCode = statusCode;
-    this.message = message;
-    this.error = error || null;
-  }
-}
-
-class InternalServerError extends HttpException {
-  constructor(error?: string) {
-    super(500, "Internal Server Error", error);
-  }
-}
-
-class BadRequestException extends HttpException {
-  constructor(error?: string) {
-    super(400, "Bad Request", error);
-  }
-}
-
-export const errorHandler = (error: HttpException, request: Request, response: Response, _: NextFunction) => {
-  const status = error.statusCode ?? 500;
-  response.status(status).send(error);
-};

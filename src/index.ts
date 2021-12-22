@@ -5,7 +5,7 @@ import helmet from "helmet";
 import winston from "winston";
 import { getIntFromEnvironment, getStringListFromEnvironment } from "./util";
 import { FileBasedStockPricesService } from "./alphavantage/simple-stock-prices-service";
-import { errorHandler, PriceRoutes } from "./http/common-http";
+import { PriceRoutes as Api } from "./http/api";
 
 dotenv.config();
 
@@ -32,16 +32,15 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const service = new FileBasedStockPricesService(symbols, dataDirectory);
-const routes = new PriceRoutes(logger, service);
+const routes = new Api(logger, service);
 
 const app = express();
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-
-routes.configureRoutes(app);
-app.use(errorHandler);
+app.use(routes.configurePriceRoute());
+app.use(routes.errorHandler);
 
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`);
