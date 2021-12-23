@@ -37,44 +37,44 @@ describe("the quack rock API", () => {
   it("returns all stock prices for a known ticker", async () => {
     const response = await request.get("/price/GE");
     assertResponseConstraints(response);
-    expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { timestamp: "2021-12-20", close: 89.98 },
       { timestamp: "2021-12-17", close: 91.45 },
       { timestamp: "2021-12-16", close: 92.53 },
       { timestamp: "2021-12-15", close: 92.08 },
     ]);
+    expect(response.status).toBe(200);
   });
 
   it("constraints the result set by the `from' parameter", async () => {
     const response = await request.get("/price/GE?from=2021-12-17");
     assertResponseConstraints(response);
-    expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { timestamp: "2021-12-20", close: 89.98 },
       { timestamp: "2021-12-17", close: 91.45 },
     ]);
+    expect(response.status).toBe(200);
   });
 
   it("constraints the result set by the `to' parameter", async () => {
     const response = await request.get("/price/GE?to=2021-12-17");
     assertResponseConstraints(response);
-    expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { timestamp: "2021-12-17", close: 91.45 },
       { timestamp: "2021-12-16", close: 92.53 },
       { timestamp: "2021-12-15", close: 92.08 },
     ]);
+    expect(response.status).toBe(200);
   });
 
   it("constraints the result set by both `from' and `to' parameters", async () => {
     const response = await request.get("/price/GE?from=2021-12-16&to=2021-12-17");
     assertResponseConstraints(response);
-    expect(response.status).toBe(200);
     expect(response.body).toEqual([
       { timestamp: "2021-12-17", close: 91.45 },
       { timestamp: "2021-12-16", close: 92.53 },
     ]);
+    expect(response.status).toBe(200);
   });
 
   it("returns not found when requesting an undefined resource", async () => {
