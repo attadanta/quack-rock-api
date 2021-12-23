@@ -86,11 +86,15 @@ describe("the quack rock API", () => {
   it("returns an internal server error when trying to access invalid price ticker data", async () => {
     const response = await request.get("/price/IBM");
     assertResponseConstraints(response);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("contains invalid data");
     expect(response.status).toBe(500);
   });
 
   it("returns a bad request when fetching an unknown ticker", async () => {
     const response = await request.get("/price/TSLA");
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toEqual("Ticker is not configured: TSLA");
     assertResponseConstraints(response);
     expect(response.status).toBe(400);
   });

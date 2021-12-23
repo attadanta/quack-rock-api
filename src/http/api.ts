@@ -53,7 +53,7 @@ export class QuackRockApi {
     const ticker = req.params["ticker"];
 
     if (!this.#pricesService.symbols().includes(ticker)) {
-      throw new BadRequestException(`Ticker is not configured ${ticker}`);
+      throw new BadRequestException(`Ticker is not configured: ${ticker}`);
     }
 
     this.#logger.debug(`Fetching price data for ${ticker}`);
