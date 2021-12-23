@@ -23,7 +23,7 @@ export class FileBasedStockPricesService implements StockPricesService {
       throw new UnknownSymbolError(`Symbol ${symbol} is not configured with this service`);
     }
 
-    const pathToStore = path.join(this.#basePath, `${symbol}.JSON`);
+    const pathToStore = path.join(this.#basePath, `${symbol}.json`);
     if (!fs.existsSync(pathToStore)) {
       throw new UnknownSymbolError(`No time series file for ${symbol} at ${pathToStore} found`);
     }
