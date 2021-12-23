@@ -41,7 +41,7 @@ describe("the in-memory prices service", () => {
     expect(second.close).toBe(125.93);
   });
 
-  it("selects available stock prices", async () => {
+  it("errors out when accessing unavailable stock price data", async () => {
     const service = new InMemoryStockPricesService({
       IBM: {
         "Time Series (Daily)": {},
