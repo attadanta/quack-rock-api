@@ -1,3 +1,4 @@
+import path from "path";
 import winston from "winston";
 import express, { Express } from "express";
 import { FileBasedStockPricesService } from "../../src/alphavantage/simple-stock-prices-service";
@@ -17,7 +18,7 @@ describe("the quack rock API", () => {
       })
     );
 
-    const dataDirectory = "./test/fixtures";
+    const dataDirectory = path.join(process.cwd(), "/test/fixtures");
     const symbols = ["GE", "IBM"];
     const service = new FileBasedStockPricesService(symbols, dataDirectory);
     const api = new Api(logger, service);

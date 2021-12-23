@@ -20,12 +20,12 @@ export class FileBasedStockPricesService implements StockPricesService {
 
   async fetchDailyClosingStockPrices(symbol: string, selector: Selector): Promise<StockPrice[]> {
     if (!this.#symbols.includes(symbol)) {
-      throw new UnknownSymbolError(symbol);
+      throw new UnknownSymbolError(`Symbol ${symbol} is not configured with this service`);
     }
 
     const pathToStore = path.join(this.#basePath, `${symbol}.JSON`);
     if (!fs.existsSync(pathToStore)) {
-      throw new UnknownSymbolError(symbol);
+      throw new UnknownSymbolError(`No time series file for ${symbol} at ${pathToStore} found`);
     }
 
     let rawData: string;
