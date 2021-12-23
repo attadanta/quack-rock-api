@@ -23,9 +23,7 @@ describe("the quack rock API", () => {
     const api = new Api(logger, service);
 
     app = express();
-    app.use(api.configurePriceRoute());
-    app.use(api.notFound);
-    app.use(api.errorHandler);
+    api.configureApp(app);
   });
 
   const assertResponseConstraints = (response: Response) => {

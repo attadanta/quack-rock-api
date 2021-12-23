@@ -1,5 +1,5 @@
 import winston from "winston";
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response, NextFunction, Application } from "express";
 import { UnknownSymbolError, ValidationError } from "../core/errors";
 import {
   CompoundSelector,
@@ -18,6 +18,12 @@ export class QuackRockApi {
   constructor(logger: winston.Logger, pricesService: StockPricesService) {
     this.#pricesService = pricesService;
     this.#logger = logger;
+  }
+
+  configureApp(app: Application) {
+    app.use(this.configurePriceRoute());
+    app.use(this.notFound);
+    app.use(this.errorHandler);
   }
 
   configurePriceRoute() {

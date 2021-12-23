@@ -39,8 +39,8 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(api.configurePriceRoute());
-app.use(api.errorHandler);
+
+api.configureApp(app);
 
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`);
