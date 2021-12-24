@@ -44,7 +44,8 @@ export class QuackRockApi {
     throw new NotFoundError();
   };
 
-  errorHandler = (error: HttpException, _request: Request, response: Response, _: NextFunction) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  errorHandler = (error: HttpException, request: Request, response: Response, next: NextFunction) => {
     const status = error.statusCode ?? 500;
     response.status(status).send(error);
   };
