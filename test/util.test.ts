@@ -40,4 +40,14 @@ describe("get string list from environment", () => {
     };
     expect(getStringListFromEnvironment(env, "SYMBOLS", ",", ["GE", "AMZN", "AAPL", "IBM"])).toEqual(["a", "b", "c"]);
   });
+
+  it("defaults to the provided values, if unset", () => {
+    const env: NodeJS.ProcessEnv = {};
+    expect(getStringListFromEnvironment(env, "SYMBOLS", ",", ["GE", "AMZN"])).toEqual(["GE", "AMZN"]);
+  });
+
+  it("throws if neither set, nor defaults provided", () => {
+    const env: NodeJS.ProcessEnv = {};
+    expect(() => getStringListFromEnvironment(env, "SYMBOLS", ",")).toThrow();
+  });
 });
