@@ -8,7 +8,7 @@ export class HttpException extends Error {
 
     this.statusCode = statusCode;
     this.message = message;
-    this.error = error || null;
+    this.error = error ?? null;
   }
 }
 

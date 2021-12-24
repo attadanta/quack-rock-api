@@ -12,11 +12,11 @@ curl "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&ap
 
 ## Code organization
 
-This service is implemente in TypeScript and contains the following packages.
+This service is implemented in TypeScript and contains the following packages.
 
 - `core`: contains the domain model. Ideally, the code here should be reusable to implement the same service on different frontends.
-- `alphavantage`: provides a very basic service implementation based on the [Alpha Vantage][1] test data.
-- `http`: implements an [Express][2] app.
+- `alphavantage`: provides a very basic service implementation using price data from [Alpha Vantage][1].
+- `express`: implements an [Express][2] app.
 
 ## Running
 
@@ -30,15 +30,19 @@ yarn serve
 Alternatively, use the Docker image:
 
 ```bash
+mkdir -p logs
 docker run -d --rm \
-  -v $(pwd)/data/:/data:ro \
+  -v "$(pwd)/data":/data:ro \
+  -v "$(pwd)/logs":/logs \
+  -e "NODE_ENV=production" \
   -e "DATA_DIRECTORY=/data" \
+  -e "LOG_DIRECTORY=/logs" \
   -e "SYMBOLS=GE,AMZN,AAPL,IBM" \
   -p 3000:3000 \
-  ghcr.io/attadanta/quack-rock-api:main \
+  ghcr.io/attadanta/quack-rock-api:main
 ```
 
-To ensure it runs, do:
+To ensure it runs as expected, do:
 
 ```bash
 curl -s localhost:3000/price/AAPL | jq .

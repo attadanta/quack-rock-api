@@ -2,7 +2,7 @@ import path from "path";
 import winston from "winston";
 import express, { Express } from "express";
 import { FileBasedStockPricesService } from "../../src/alphavantage/simple-stock-prices-service";
-import { QuackRockApi as Api } from "../../src/http/api";
+import { QuackRockApi as Api } from "../../src/express/api";
 import supertest, { Response } from "supertest";
 
 describe("the quack rock API", () => {

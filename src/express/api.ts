@@ -46,6 +46,9 @@ export class QuackRockApi {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   errorHandler = (error: HttpException, request: Request, response: Response, next: NextFunction) => {
+    if (error instanceof InternalServerError) {
+      this.#logger.error("Caught an error", error);
+    }
     const status = error.statusCode ?? 500;
     response.status(status).send(error);
   };
@@ -57,7 +60,6 @@ export class QuackRockApi {
       throw new BadRequestException(`Ticker is not configured: ${ticker}`);
     }
 
-    this.#logger.debug(`Fetching price data for ${ticker}`);
     const criteria = new CompoundSelector();
 
     this.validateDateQueryParameter(req, "from", (from) => criteria.addSelector(new SinceDateSelector(from)));
