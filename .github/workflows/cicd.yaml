@@ -6,25 +6,49 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+
       - name: Install dependencies
         run: yarn --frozen-lockfile
+
       - name: Build
         run: yarn tsc --noEmit && yarn eslint "**/*.{js,ts}"
+
       - name: Test
         run: yarn test
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag docker.pkg.github.com/${GITHUB_REPOSITORY}/quack-rock-api:latest
-      - name: Authenticate with the registry
-        run: docker login https://docker.pkg.github.com -u attadanta --password ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish the Docker image
-        run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/quack-rock-api:latest
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1.12.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3.6.2
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
