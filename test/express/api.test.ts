@@ -47,7 +47,7 @@ describe("the quack rock REST API", () => {
     expect(response.status).toBe(200);
   });
 
-  it("constraints the result set by the `from' parameter", async () => {
+  it("constrains the result set by the `from' parameter", async () => {
     const response = await request.get("/price/GE?from=2021-12-17");
     assertResponseConstraints(response);
     expect(response.body).toEqual([
@@ -57,7 +57,7 @@ describe("the quack rock REST API", () => {
     expect(response.status).toBe(200);
   });
 
-  it("constraints the result set by the `to' parameter", async () => {
+  it("constrains the result set by the `to' parameter", async () => {
     const response = await request.get("/price/GE?to=2021-12-17");
     assertResponseConstraints(response);
     expect(response.body).toEqual([
@@ -68,7 +68,7 @@ describe("the quack rock REST API", () => {
     expect(response.status).toBe(200);
   });
 
-  it("constraints the result set by both `from' and `to' parameters", async () => {
+  it("constrains the result set by both `from' and `to' parameters", async () => {
     const response = await request.get("/price/GE?from=2021-12-16&to=2021-12-17");
     assertResponseConstraints(response);
     expect(response.body).toEqual([
