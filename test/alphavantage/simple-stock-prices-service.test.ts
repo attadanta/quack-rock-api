@@ -28,15 +28,15 @@ describe("the in-memory prices service", () => {
     });
 
     const selector = new CompoundSelector();
-    selector.addSelector(new SinceDateSelector("2021-12-16"));
-    selector.addSelector(new UntilDateSelector("2021-12-17"));
+    selector.addSelector(new SinceDateSelector(new Date("2021-12-16")));
+    selector.addSelector(new UntilDateSelector(new Date("2021-12-17")));
 
     const result = await service.fetchDailyClosingStockPrices("IBM", selector);
 
     expect(result.length).toBe(2);
     const [first, second] = result;
-    expect(first.timestamp).toBe("2021-12-17");
-    expect(second.timestamp).toBe("2021-12-16");
+    expect(first.timestamp).toEqual(new Date("2021-12-17"));
+    expect(second.timestamp).toEqual(new Date("2021-12-16"));
     expect(first.close).toBe(127.4);
     expect(second.close).toBe(125.93);
   });
@@ -49,8 +49,8 @@ describe("the in-memory prices service", () => {
     });
 
     const selector = new CompoundSelector();
-    selector.addSelector(new SinceDateSelector("2021-12-16"));
-    selector.addSelector(new UntilDateSelector("2021-12-17"));
+    selector.addSelector(new SinceDateSelector(new Date("2021-12-16")));
+    selector.addSelector(new UntilDateSelector(new Date("2021-12-17")));
 
     try {
       return await service.fetchDailyClosingStockPrices("AAPL", selector);

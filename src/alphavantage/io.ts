@@ -1,6 +1,4 @@
-import { DailyClosingStockPrice, DailyClosingStockPrices, IndexOfDailyClosingStockPrices } from "./model";
-
-const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+import { DailyClosingStockPrice, DailyClosingStockPrices, IndexOfDailyClosingStockPrices, datePattern } from "./model";
 
 export const isDailyStockPrices = (data: unknown): data is DailyClosingStockPrices => {
   const key = "Time Series (Daily)";

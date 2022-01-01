@@ -82,13 +82,14 @@ const selectStockPrices = (store: DailyClosingStockPrices, selector: Selector): 
   const result: StockPrice[] = [];
 
   for (const timestamp of Object.keys(timeSeries)) {
-    if (selector.apply(timestamp)) {
+    const date = new Date(timestamp);
+    if (selector.apply(date)) {
       const close = parseFloat(timeSeries[timestamp]["4. close"]);
-      result.push({ timestamp, close });
+      result.push({ timestamp: date, close });
     }
   }
 
-  result.sort((priceA, priceB) => priceB.timestamp.localeCompare(priceA.timestamp));
+  result.sort((priceA, priceB) => priceB.timestamp.getTime() - priceA.timestamp.getTime());
 
   return result;
 };

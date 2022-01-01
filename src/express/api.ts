@@ -10,6 +10,13 @@ import {
 } from "../core/stock-prices-service";
 import { HttpException, InternalServerError, BadRequestException, NotFoundError } from "./errors";
 
+interface DailyStockPriceResponse {
+  timestamp: string;
+  close: number;
+}
+
+type DailyStockPricesResponse = Array<DailyStockPriceResponse>;
+
 export class QuackRockApi {
   #pricesService: StockPricesService;
   #logger: winston.Logger;
@@ -62,13 +69,15 @@ export class QuackRockApi {
 
     const criteria = new CompoundSelector();
 
-    this.validateDateQueryParameter(req, "from", (from) => criteria.addSelector(new SinceDateSelector(from)));
-    this.validateDateQueryParameter(req, "to", (to) => criteria.addSelector(new UntilSelector(to)));
+    this.validateDateQueryParameter(req, "from", (from) => criteria.addSelector(new SinceDateSelector(new Date(from))));
+    this.validateDateQueryParameter(req, "to", (to) => criteria.addSelector(new UntilSelector(new Date(to))));
 
-    let results: Array<StockPrice>;
+    let results: DailyStockPricesResponse;
 
     try {
-      results = await this.#pricesService.fetchDailyClosingStockPrices(ticker, criteria);
+      results = await this.#pricesService
+        .fetchDailyClosingStockPrices(ticker, criteria)
+        .then((prices) => prices.map(this.toStockPriceResponse));
     } catch (e: unknown) {
       if (e instanceof ValidationError || e instanceof UnknownSymbolError) {
         throw new InternalServerError(e.message);
@@ -89,5 +98,12 @@ export class QuackRockApi {
         onValid(parameterValue);
       }
     }
+  }
+
+  private toStockPriceResponse(price: StockPrice): DailyStockPriceResponse {
+    return {
+      timestamp: price.timestamp.toISOString().substring(0, 10),
+      close: price.close,
+    };
   }
 }

@@ -5,7 +5,7 @@ import { FileBasedStockPricesService } from "../../src/alphavantage/simple-stock
 import { QuackRockApi as Api } from "../../src/express/api";
 import supertest, { Response } from "supertest";
 
-describe("the quack rock API", () => {
+describe("the quack rock REST API", () => {
   let app: Express;
   let request: supertest.SuperTest<supertest.Test>;
 

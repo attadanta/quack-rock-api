@@ -1,13 +1,10 @@
 export interface StockPrice {
-  timestamp: string;
+  timestamp: Date;
   close: number;
 }
 
-/**
- * In line with the precepts of QuackRock, this service expressly refuses to deal with time instants in a reliable manner.
- */
 export interface Selector {
-  apply: (timestamp: string) => boolean;
+  apply: (date: Date) => boolean;
 }
 
 export class CompoundSelector implements Selector {
@@ -21,32 +18,32 @@ export class CompoundSelector implements Selector {
     this.#selectors.push(selector);
   }
 
-  apply(date: string) {
+  apply(date: Date) {
     return this.#selectors.reduce((prev, selector) => prev && selector.apply(date), true);
   }
 }
 
 export class SinceDateSelector implements Selector {
-  #referenceDate: string;
+  #referenceDate: Date;
 
-  constructor(date: string) {
+  constructor(date: Date) {
     this.#referenceDate = date;
   }
 
-  apply(date: string) {
-    return date.localeCompare(this.#referenceDate) >= 0;
+  apply(date: Date) {
+    return date.getTime() - this.#referenceDate.getTime() >= 0;
   }
 }
 
 export class UntilSelector implements Selector {
-  #referenceDate: string;
+  #referenceDate: Date;
 
-  constructor(date: string) {
+  constructor(date: Date) {
     this.#referenceDate = date;
   }
 
-  apply(date: string) {
-    return this.#referenceDate.localeCompare(date) >= 0;
+  apply(date: Date) {
+    return this.#referenceDate.getTime() - date.getTime() >= 0;
   }
 }
 
