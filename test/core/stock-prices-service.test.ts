@@ -1,6 +1,6 @@
 import {
   CompoundSelector,
-  SinceDateSelector as SinceSelector,
+  SinceSelector as SinceSelector,
   UntilSelector,
 } from "../../src/core/stock-prices-service";
 

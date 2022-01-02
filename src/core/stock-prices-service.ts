@@ -23,7 +23,7 @@ export class CompoundSelector implements Selector {
   }
 }
 
-export class SinceDateSelector implements Selector {
+export class SinceSelector implements Selector {
   #referenceDate: Date;
 
   constructor(date: Date) {

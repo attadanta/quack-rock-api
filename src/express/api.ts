@@ -3,7 +3,7 @@ import { Router, Request, Response, NextFunction, Application } from "express";
 import { UnknownSymbolError, ValidationError } from "../core/errors";
 import {
   CompoundSelector,
-  SinceDateSelector,
+  SinceSelector,
   StockPrice,
   StockPricesService,
   UntilSelector,
@@ -69,7 +69,7 @@ export class QuackRockApi {
 
     const criteria = new CompoundSelector();
 
-    this.validateDateQueryParameter(req, "from", (from) => criteria.addSelector(new SinceDateSelector(new Date(from))));
+    this.validateDateQueryParameter(req, "from", (from) => criteria.addSelector(new SinceSelector(new Date(from))));
     this.validateDateQueryParameter(req, "to", (to) => criteria.addSelector(new UntilSelector(new Date(to))));
 
     let results: DailyStockPricesResponse;

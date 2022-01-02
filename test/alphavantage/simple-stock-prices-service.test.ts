@@ -2,7 +2,7 @@ import { InMemoryStockPricesService } from "../../src/alphavantage/simple-stock-
 import { UnknownSymbolError } from "../../src/core/errors";
 import {
   CompoundSelector,
-  SinceDateSelector,
+  SinceSelector,
   UntilSelector as UntilDateSelector,
 } from "../../src/core/stock-prices-service";
 
@@ -28,7 +28,7 @@ describe("the in-memory prices service", () => {
     });
 
     const selector = new CompoundSelector();
-    selector.addSelector(new SinceDateSelector(new Date("2021-12-16")));
+    selector.addSelector(new SinceSelector(new Date("2021-12-16")));
     selector.addSelector(new UntilDateSelector(new Date("2021-12-17")));
 
     const result = await service.fetchDailyClosingStockPrices("IBM", selector);
@@ -49,7 +49,7 @@ describe("the in-memory prices service", () => {
     });
 
     const selector = new CompoundSelector();
-    selector.addSelector(new SinceDateSelector(new Date("2021-12-16")));
+    selector.addSelector(new SinceSelector(new Date("2021-12-16")));
     selector.addSelector(new UntilDateSelector(new Date("2021-12-17")));
 
     try {
