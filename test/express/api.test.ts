@@ -1,5 +1,5 @@
 import path from "path";
-import winston from "winston";
+import winston, { format } from "winston";
 import express, { Express } from "express";
 import { FileBasedStockPricesService } from "../../src/alphavantage/simple-stock-prices-service";
 import { QuackRockApi as Api } from "../../src/express/api";
@@ -11,10 +11,10 @@ describe("the quack rock REST API", () => {
 
   beforeAll(() => {
     const logger = winston.createLogger();
+    const { combine, errors } = format;
     logger.add(
       new winston.transports.Console({
-        format: winston.format.simple(),
-        silent: true,
+        format: combine(winston.format.simple(), errors({ stack: true })),
       })
     );
 

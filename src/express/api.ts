@@ -53,10 +53,10 @@ export class QuackRockApi {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   errorHandler = (error: HttpException, request: Request, response: Response, next: NextFunction) => {
-    if (error instanceof InternalServerError) {
+    const status = error.statusCode ?? 500;
+    if (status >= 500) {
       this.#logger.error("Caught an error", error);
     }
-    const status = error.statusCode ?? 500;
     response.status(status).send(error);
   };
 
