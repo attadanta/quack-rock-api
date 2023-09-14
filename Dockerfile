@@ -1,9 +1,8 @@
-FROM node:lts-buster-slim
+FROM oven/bun:1.0.1
 WORKDIR /app
 COPY package.json yarn.lock tsconfig.json /app/
-RUN yarn --frozen-lockfile
+RUN bun i --frozen-lockfile
 ADD . /app
-RUN yarn tsc
 VOLUME [ "/data", "/logs" ]
 EXPOSE 3000
-CMD [ "yarn", "serve" ]
+CMD [ "bun", "serve" ]
